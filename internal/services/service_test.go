@@ -20,3 +20,19 @@ func TestArrayToString(t *testing.T) {
 		}
 	}
 }
+
+func TestArrayToStringCopy(t *testing.T) {
+	tests := []struct {
+		input    []string
+		expected string
+	}{
+		{[]string{"react", "next", "django"}, "react,next,django"},
+	}
+
+	for _, test := range tests {
+		result := ArrayToString(test.input)
+		if result != test.expected {
+			t.Errorf("arrayToString(%v) = %v; want %v", test.input, result, test.expected)
+		}
+	}
+}
