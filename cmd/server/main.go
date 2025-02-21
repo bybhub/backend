@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/bybhub/backend/internal/config"
+	"github.com/bybhub/backend/internal/routes"
+)
 
 func main() {
-	fmt.Println("Hello world")
+	config.InitializeSecrets()
+	routes.InitializeRouter()
 }
