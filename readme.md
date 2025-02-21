@@ -30,3 +30,12 @@ O Docker será uma ferramenta fundamental para nosso desenvolvimento. Ele permit
 Para garantir uma gestão eficiente do nosso código, manteremos o fluxo de pull requests dividido seguindo a metodologia Git Flow. Isso nos permitirá organizar melhor o desenvolvimento, facilitando a colaboração e a revisão do código. O Git Flow é uma abordagem popular que ajuda a gerenciar versões e a implementar novas funcionalidades de maneira estruturada. Para mais informações sobre como utilizar o Git Flow, consulte este artigo: [Gitflow](https://www.alura.com.br/artigos/git-flow-o-que-e-como-quando-utilizar?srsltid=AfmBOoryp2QatJYqUKRo5Y_Uwf-xIGkdwsy2N8E7k3sPLgR1tdfprtJb)
 
 Em caso de dúvida, consulte o PR aberto na branch feature/example.
+
+## Test Coverage
+
+```bash
+github.com/bybhub/backend/cmd/server            coverage: 0.0% of statements
+github.com/bybhub/backend/internal/config       coverage: 0.0% of statements
+github.com/bybhub/backend/internal/routes       coverage: 0.0% of statements
+github.com/bybhub/backend/internal/services     coverage 100.0% of statements
+```
