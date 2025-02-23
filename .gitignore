@@ -26,3 +26,4 @@ go.work.sum
 
 # tmp files created by air
 /tmp
+/tmp/main
