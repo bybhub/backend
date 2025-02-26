@@ -29,6 +29,6 @@ jobs:
         fi
         cd backend
         git pull origin main
-        go build -o byb
+        go build cmd/server/main.go -o main
         sudo systemctl restart backend
         EOF
