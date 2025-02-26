@@ -12,6 +12,7 @@ var (
 func main() {
 	logger = *config.GetLogger("main")
 	err := config.Init()
+	logger.Debug("Config started")
 	if err != nil {
 		logger.Errorf("Config init error: %s", err)
 		return
