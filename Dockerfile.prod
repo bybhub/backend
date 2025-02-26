@@ -7,7 +7,7 @@ RUN CGO_ENABLED=0 go build -o bin/byb cmd/server/main.go . && \
 
 FROM alpine:3.21
 WORKDIR /root/
-COPY --from=builder /app/byb .
+COPY --from=builder /app/bin/byb .
 RUN chmod +x /root/byb && \
     mkdir /root/logs
 CMD [ "./byb" ]
