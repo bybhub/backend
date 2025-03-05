@@ -6,10 +6,12 @@ import (
 )
 
 func RoutesV1(api *gin.RouterGroup) {
+
 	v1 := api.Group("/v1")
 	{
-		v1.GET("/", func(ctx *gin.Context) {
-			handler.SendSuccess(ctx, "v1", handler.Response{Resp: "ok"})
-		})
+		v1.POST("/users", handler.CreateUserHandler)       // handler.CreateUserHandler
+		v1.GET("/users/:id", handler.GetUserHandler)       // handler.GetUserHandler
+		v1.PUT("/users/:id", handler.UpdateUserHandler)    // handler.UpdateUserHandler
+		v1.DELETE("/users/:id", handler.DeleteUserHandler) // handler.DeleteUserHandler
 	}
 }
