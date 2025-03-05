@@ -25,3 +25,7 @@ go.work.sum
 # env file
 .env
 .env.prod
+
+tmp/
+main
+build-errors.log
