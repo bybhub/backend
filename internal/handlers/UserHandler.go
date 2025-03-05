@@ -80,19 +80,15 @@ func UpdateUserHandler(ctx *gin.Context) {
 func DeleteUserHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	// Tentar deletar o usuário com o ID fornecido
 	err := repositories.DeleteUserByID(db, "user", id)
 	if err != nil {
-		// Se o erro for "usuário não encontrado", retornar 404
 		if err.Error() == "usuário não encontrado" {
 			SendError(ctx, http.StatusNotFound, err.Error())
 			return
 		}
-		// Se ocorrer outro erro, retornar 500
 		SendError(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	// Se a deleção for bem-sucedida, retornar 204 No Content
 	ctx.Status(http.StatusNoContent)
 }
