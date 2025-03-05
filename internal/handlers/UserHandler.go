@@ -9,7 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// Criar um novo usuário
 func CreateUserHandler(ctx *gin.Context) {
 	var user models.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
@@ -54,27 +53,30 @@ func GetAllUsers(ctx *gin.Context) {
 	SendSuccessObject(ctx, "users", users)
 }
 
-// Buscar usuário por ID
-
-// Atualizar usuário por ID
 func UpdateUserHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
-	var updateData bson.M
 
+	var updateData bson.M
 	if err := ctx.ShouldBindJSON(&updateData); err != nil {
 		SendError(ctx, http.StatusBadRequest, "Invalid request")
 		return
 	}
 
-	if err := repositories.UpdateUserByID(db, "user", id, updateData); err != nil {
+	_, err := repositories.FindUserByID(db, "user", id)
+	if err != nil {
+		SendError(ctx, http.StatusNotFound, err.Error())
+		return
+	}
+
+	updatedUser, err := repositories.UpdateUserByID(db, "user", id, updateData)
+	if err != nil {
 		SendError(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	SendSuccess(ctx, "user", Response{Resp: "User updated successfully"})
+	SendSuccessObject(ctx, "user", updatedUser)
 }
 
-// Deletar usuário por ID
 func DeleteUserHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 

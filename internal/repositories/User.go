@@ -58,10 +58,37 @@ func FindUserByID(db *mongo.Database, collectionName string, id string) (*models
 	return &result, nil
 }
 
-// atualizar usuario pelo id
-func UpdateUserByID(db *mongo.Database, collectionName string, id string, update bson.M) error {
-	_, err := db.Collection(collectionName).UpdateOne(ctx, bson.M{"_id": id}, bson.M{"$set": update})
-	return err
+func UpdateUserByID(db *mongo.Database, collectionName string, id string, update bson.M) (*models.UserResponse, error) {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, errors.New("ID inválido")
+	}
+
+	result, err := db.Collection(collectionName).UpdateOne(
+		context.TODO(),
+		bson.M{"_id": objectID},
+		bson.M{"$set": update},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if result.MatchedCount == 0 {
+		return nil, errors.New("usuário não encontrado")
+	}
+
+	if result.ModifiedCount == 0 {
+		return nil, errors.New("nenhuma alteração realizada, dados já estavam atualizados")
+	}
+
+	var updatedUser models.UserResponse
+	err = db.Collection(collectionName).FindOne(context.TODO(), bson.M{"_id": objectID}).Decode(&updatedUser)
+	if err != nil {
+		return nil, errors.New("erro ao buscar usuário atualizado")
+	}
+
+	return &updatedUser, nil
 }
 
 // deletar usuario pelo id
