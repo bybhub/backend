@@ -1,19 +1,17 @@
 package v1
 
 import (
-	"github.com/bybhub/backend/internal/handlers"
+	handler "github.com/bybhub/backend/internal/handlers"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func RoutesV1(api *gin.RouterGroup, db *mongo.Database) {
-	handler := &handlers.UserHandler{DB: db}
+func RoutesV1(api *gin.RouterGroup) {
 
 	v1 := api.Group("/v1")
 	{
-		v1.POST("/users", handler.CreateUserHandler)       // Criar usuário
-		v1.GET("/users/:id", handler.GetUserHandler)       // Buscar usuário
-		v1.PUT("/users/:id", handler.UpdateUserHandler)    // Atualizar usuário
-		v1.DELETE("/users/:id", handler.DeleteUserHandler) // Deletar usuário
+		v1.POST("/users", handler.CreateUserHandler)       // handler.CreateUserHandler
+		v1.GET("/users/:id", handler.GetUserHandler)       // handler.GetUserHandler
+		v1.PUT("/users/:id", handler.UpdateUserHandler)    // handler.UpdateUserHandler
+		v1.DELETE("/users/:id", handler.DeleteUserHandler) // handler.DeleteUserHandler
 	}
 }
