@@ -91,8 +91,20 @@ func UpdateUserByID(db *mongo.Database, collectionName string, id string, update
 	return &updatedUser, nil
 }
 
-// deletar usuario pelo id
 func DeleteUserByID(db *mongo.Database, collectionName string, id string) error {
-	_, err := db.Collection(collectionName).DeleteOne(ctx, bson.M{"_id": id})
-	return err
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return errors.New("ID inválido")
+	}
+
+	result, err := db.Collection(collectionName).DeleteOne(context.TODO(), bson.M{"_id": objectID})
+	if err != nil {
+		return err
+	}
+
+	if result.DeletedCount == 0 {
+		return errors.New("usuário não encontrado")
+	}
+
+	return nil
 }
