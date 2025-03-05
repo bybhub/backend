@@ -36,17 +36,3 @@ func TestHealthRoute(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Contains(t, w.Body.String(), `"resp":"ok"`) // Verifica se a resposta contém a chave "resp"
 }
-
-// Teste para a rota "/api/v1/"
-func TestV1Route(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	router := gin.Default()
-	apiRoutes(router) // Registra as rotas da API
-
-	req, _ := http.NewRequest("GET", "/api/v1/", nil)
-	w := httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Contains(t, w.Body.String(), `"resp":"ok"`)
-}

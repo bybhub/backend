@@ -12,7 +12,6 @@ import (
 
 var ctx = context.TODO()
 
-// criando um novo usuário
 func CreateNewUser(db *mongo.Database, collectionName string, user *models.User) (primitive.ObjectID, error) {
 	result, err := db.Collection(collectionName).InsertOne(ctx, user)
 	if err != nil {
@@ -38,7 +37,6 @@ func FindAllUsers(db *mongo.Database, collectionName string) ([]models.UserRespo
 	return results, nil
 }
 
-// buscar usuario pelo ID
 func FindUserByID(db *mongo.Database, collectionName string, id string) (*models.UserResponse, error) {
 	var result models.UserResponse
 
