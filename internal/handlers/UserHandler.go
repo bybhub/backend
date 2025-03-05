@@ -17,15 +17,21 @@ func CreateUserHandler(ctx *gin.Context) {
 		return
 	}
 
-	if err := repositories.CreateNewUser(db, "user", &user); err != nil {
+	id, err := repositories.CreateNewUser(db, "user", &user)
+	if err != nil {
 		SendError(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	SendSuccess(ctx, "user", Response{Resp: "User created successfully"})
+	userResponse := models.UserResponse{
+		ID:    id,
+		Name:  user.Name,
+		Email: user.Email,
+	}
+
+	SendSuccessObject(ctx, "user", userResponse)
 }
 
-// Buscar usuário por ID
 func GetUserHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -35,8 +41,20 @@ func GetUserHandler(ctx *gin.Context) {
 		return
 	}
 
-	SendSuccess(ctx, "user", Response{Resp: user.Email})
+	SendSuccessObject(ctx, "user", user)
 }
+
+func GetAllUsers(ctx *gin.Context) {
+	users, err := repositories.FindAllUsers(db, "user")
+	if err != nil {
+		SendError(ctx, http.StatusNotFound, err.Error())
+		return
+	}
+
+	SendSuccessObject(ctx, "users", users)
+}
+
+// Buscar usuário por ID
 
 // Atualizar usuário por ID
 func UpdateUserHandler(ctx *gin.Context) {
