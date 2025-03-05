@@ -65,5 +65,5 @@ func DeleteUserHandler(ctx *gin.Context) {
 		return
 	}
 
-	SendSuccess(ctx, "user", Response{Resp: "User deleted successfully"})
+	SendSuccess(ctx, "user", Response{Resp: "ok"})
 }

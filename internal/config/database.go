@@ -13,7 +13,7 @@ var ctx = context.TODO()
 
 func mongoHost(secrets *Secrets) string {
 	if secrets.ENV == "PROD" {
-		mongoHostString := fmt.Sprintf("mongodb+srv://%s:%s@%s/", secrets.MONGO_DB_USER, secrets.MONGO_DB_PASS, secrets.MONGO_DB_HOST)
+		mongoHostString := fmt.Sprintf("mongodb+srv://%s:%s@%s", secrets.MONGO_DB_USER, secrets.MONGO_DB_PASS, secrets.MONGO_DB_HOST)
 		return mongoHostString
 	}
 	return secrets.MONGO_DB_HOST_LOCAL

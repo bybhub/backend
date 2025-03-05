@@ -1,0 +1,40 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile.prod --tag my-image-name:latest
+
+    - name: Extract binary from Docker container
+      run: |
+        container_id=$(docker create my-image-name:latest)
+        docker cp $container_id:/root/byb ./byb
+        docker rm -v $container_id
+
+    - name: Set executable permission
+      run: chmod +x ./byb
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v1.0.${{ github.run_id }}
+        files: |
+          ./byb
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
