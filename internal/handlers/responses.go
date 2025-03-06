@@ -23,6 +23,14 @@ func SendSuccess(ctx *gin.Context, op string, data Response) {
 	})
 }
 
+func SendSuccessObject(ctx *gin.Context, op string, data any) {
+	ctx.Header("Content-type", "application/json")
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("%s success", op),
+		"data":    data,
+	})
+}
+
 func SendRedirect(ctx *gin.Context, redirectURL string) {
 	ctx.Redirect(http.StatusPermanentRedirect, redirectURL)
 }

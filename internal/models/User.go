@@ -5,12 +5,13 @@ import (
 )
 
 type User struct {
-	Name  string
-	Email string
+	ID    primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Name  string             `json:"name"`
+	Email string             `json:"email"`
 }
 
 type UserResponse struct {
-	ID    primitive.ObjectID `json:"_id"`
+	ID    primitive.ObjectID `bson:"_id" json:"id"`
 	Name  string             `json:"name"`
 	Email string             `json:"email"`
 }

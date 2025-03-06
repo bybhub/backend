@@ -9,7 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// Criar um novo usuário
 func CreateUserHandler(ctx *gin.Context) {
 	var user models.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
@@ -17,15 +16,21 @@ func CreateUserHandler(ctx *gin.Context) {
 		return
 	}
 
-	if err := repositories.CreateNewUser(db, "user", &user); err != nil {
+	id, err := repositories.CreateNewUser(db, "user", &user)
+	if err != nil {
 		SendError(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	SendSuccess(ctx, "user", Response{Resp: "User created successfully"})
+	userResponse := models.UserResponse{
+		ID:    id,
+		Name:  user.Name,
+		Email: user.Email,
+	}
+
+	SendSuccessObject(ctx, "user", userResponse)
 }
 
-// Buscar usuário por ID
 func GetUserHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -35,35 +40,55 @@ func GetUserHandler(ctx *gin.Context) {
 		return
 	}
 
-	SendSuccess(ctx, "user", Response{Resp: user.Email})
+	SendSuccessObject(ctx, "user", user)
 }
 
-// Atualizar usuário por ID
+func GetAllUsers(ctx *gin.Context) {
+	users, err := repositories.FindAllUsers(db, "user")
+	if err != nil {
+		SendError(ctx, http.StatusNotFound, err.Error())
+		return
+	}
+
+	SendSuccessObject(ctx, "users", users)
+}
+
 func UpdateUserHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
-	var updateData bson.M
 
+	var updateData bson.M
 	if err := ctx.ShouldBindJSON(&updateData); err != nil {
 		SendError(ctx, http.StatusBadRequest, "Invalid request")
 		return
 	}
 
-	if err := repositories.UpdateUserByID(db, "user", id, updateData); err != nil {
+	_, err := repositories.FindUserByID(db, "user", id)
+	if err != nil {
+		SendError(ctx, http.StatusNotFound, err.Error())
+		return
+	}
+
+	updatedUser, err := repositories.UpdateUserByID(db, "user", id, updateData)
+	if err != nil {
 		SendError(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	SendSuccess(ctx, "user", Response{Resp: "User updated successfully"})
+	SendSuccessObject(ctx, "user", updatedUser)
 }
 
-// Deletar usuário por ID
 func DeleteUserHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	if err := repositories.DeleteUserByID(db, "user", id); err != nil {
+	err := repositories.DeleteUserByID(db, "user", id)
+	if err != nil {
+		if err.Error() == "usuário não encontrado" {
+			SendError(ctx, http.StatusNotFound, err.Error())
+			return
+		}
 		SendError(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	SendSuccess(ctx, "user", Response{Resp: "ok"})
+	ctx.Status(http.StatusNoContent)
 }
